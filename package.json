@@ -1,0 +1,60 @@
+{
+  "name": "jchecks",
+  "version": "0.0.1",
+  "description": "A mobile page of internationalization development framework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zswang/jchecks.git"
+  },
+  "scripts": {
+    "_update_version": "node version.js",
+    "debug": "gulp debug",
+    "dev": "npm run debug",
+    "_dist": "gulp dist example && npm run test",
+    "dist": "npm run _update_version && npm run _dist",
+    "mocha": "mocha",
+    "test": "istanbul cover --hook-run-in-context node_modules/mocha/bin/_mocha -- -R spec",
+    "lint": "jshint jchecks.js"
+  },
+  "keywords": [
+    "checklist"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zswang/jchecks/issues"
+  },
+  "homepage": "https://github.com/zswang/jchecks",
+  "author": {
+    "name": "zswang",
+    "url": "http://weibo.com/zswang"
+  },
+  "main": "jchecks.js",
+  "dependencies": {
+    "colors": "^1.0.3",
+    "mkdirp": "^0.5.0",
+    "commander": "^2.9.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-examplejs": "0.0.9",
+    "gulp-jdists": "^2.0.0",
+    "gulp-open": "^2.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^3.1.6",
+    "gulp-uglify": "^2.1.2",
+    "h5emitter": "1.0.0",
+    "istanbul": "^0.4.5",
+    "jsdom": "^9.12.0",
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0",
+    "should": "^11.2.1"
+  },
+  "files": [
+    "README.md",
+    "jchecks.js",
+    "jchecks.min.js",
+    "cli.js",
+    "lib"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "jchecks",
+  "version": "0.0.24",
+  "homepage": "https://github.com/zswang/jchecks",
+  "description": "A mobile page of internationalization development framework",
+  "main": "h5i18n.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "checklist"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "tests",
+    "src",
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "test",
+    "tests"
+  ],
+  "author": {
+    "name": "zswang",
+    "url": "http://weibo.com/zswang"
+  }
+}
