@@ -117,6 +117,7 @@ var Emitter = (function () {
 }()); /*</function>*/
   /* istanbul ignore next */
   var __extends = (function () {
+    /* jshint proto: true */
     var extendStatics = Object.setPrototypeOf ||
       ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
       function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
