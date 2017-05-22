@@ -147,6 +147,7 @@ var Emitter = (function () {
       },
       timeout: 5000,
     }, {
+    }, {
       checker: function () {
         console.log('checker 2')
         return flag > 3
@@ -175,6 +176,7 @@ var Emitter = (function () {
     // > checker 1
     // > checker 1
     // > processor 1
+    // > checker 2
     // > checker 2
     // > checker 2
     // > checker 2
@@ -239,9 +241,12 @@ var Checklist = (function (_super) {
         return _this;
     }
     /**
-     * 运行状态机
+     * 主动运行状态机
      */
     Checklist.prototype.run = function () {
+        if (!this.timer) {
+            return;
+        }
         var item = this.stepItems[this.StepIndex];
         if (!item) {
             this.stop();
@@ -255,11 +260,13 @@ var Checklist = (function (_super) {
                 return;
             }
         }
-        if (item.checker()) {
-            var error = item.processor();
-            if (error) {
-                this.error(error);
-                return;
+        if (item.checker === undefined || item.checker()) {
+            if (item.processor !== undefined) {
+                var error = item.processor();
+                if (error) {
+                    this.error(error);
+                    return;
+                }
             }
             this.next();
         }
@@ -296,6 +303,7 @@ var Checklist = (function (_super) {
      */
     Checklist.prototype.stop = function () {
         clearInterval(this.timer);
+        this.timer = 0;
         this.emit('stop');
     };
     /**
@@ -324,4 +332,4 @@ var Checklist = (function (_super) {
   } else {
     window[exportName] = exports;
   }
-})('jstates');
+})('jchecks');

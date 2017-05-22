@@ -50,6 +50,7 @@ interface ChecklistOptions {
       },
       timeout: 5000,
     }, {
+    }, {
       checker: function () {
         console.log('checker 2')
         return flag > 3
@@ -78,7 +79,6 @@ interface ChecklistOptions {
     // > checker 1
     // > checker 1
     // > processor 1
-    // > checker 2
     // > checker 2
     // > checker 2
     // > processor 2
@@ -155,9 +155,12 @@ class Checklist extends Emitter {
   }
 
   /**
-   * 运行状态机
+   * 主动运行状态机
    */
   run() {
+    if (!this.timer) {
+      return
+    }
     let item = this.stepItems[this.StepIndex]
     if (!item) {
       this.stop()
@@ -172,11 +175,13 @@ class Checklist extends Emitter {
       }
     }
 
-    if (item.checker()) {
-      let error = item.processor()
-      if (error) {
-        this.error(error)
-        return
+    if (item.checker === undefined || item.checker()) {
+      if (item.processor !== undefined) {
+        let error = item.processor()
+        if (error) {
+          this.error(error)
+          return
+        }
       }
       this.next()
     }
@@ -217,6 +222,7 @@ class Checklist extends Emitter {
    */
   stop() {
     clearInterval(this.timer)
+    this.timer = 0
     this.emit('stop')
   }
 

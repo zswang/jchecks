@@ -1,6 +1,6 @@
 {
   "name": "jchecks",
-  "version": "0.0.24",
+  "version": "0.0.9",
   "homepage": "https://github.com/zswang/jchecks",
   "description": "A mobile page of internationalization development framework",
   "main": "h5i18n.js",

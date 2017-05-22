@@ -31,6 +31,7 @@ describe("src/ts/Checklist.ts", function () {
       },
       timeout: 5000,
     }, {
+    }, {
       checker: function () {
         examplejs_print('checker 2')
         return flag > 3
@@ -56,7 +57,7 @@ describe("src/ts/Checklist.ts", function () {
   })
   checklist.once('stop', function () {
     clearInterval(flagTimer)
-    assert.equal(examplejs_printLines.join("\n"), "checker 1\nchecker 1\nprocessor 1\nchecker 2\nchecker 2\nchecker 2\nprocessor 2\nchecker 3\nprocessor 3\nonce error: \"error 3\""); examplejs_printLines = [];
+    assert.equal(examplejs_printLines.join("\n"), "checker 1\nchecker 1\nprocessor 1\nchecker 2\nchecker 2\nprocessor 2\nchecker 3\nprocessor 3\nonce error: \"error 3\""); examplejs_printLines = [];
 
     done();
   })

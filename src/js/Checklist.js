@@ -32,6 +32,7 @@ var Emitter_1 = require("h5emitter/src/ts/Emitter");
       },
       timeout: 5000,
     }, {
+    }, {
       checker: function () {
         console.log('checker 2')
         return flag > 3
@@ -60,7 +61,6 @@ var Emitter_1 = require("h5emitter/src/ts/Emitter");
     // > checker 1
     // > checker 1
     // > processor 1
-    // > checker 2
     // > checker 2
     // > checker 2
     // > processor 2
@@ -129,9 +129,12 @@ var Checklist = (function (_super) {
         return _this;
     }
     /**
-     * 运行状态机
+     * 主动运行状态机
      */
     Checklist.prototype.run = function () {
+        if (!this.timer) {
+            return;
+        }
         var item = this.stepItems[this.StepIndex];
         if (!item) {
             this.stop();
@@ -145,11 +148,13 @@ var Checklist = (function (_super) {
                 return;
             }
         }
-        if (item.checker()) {
-            var error = item.processor();
-            if (error) {
-                this.error(error);
-                return;
+        if (item.checker === undefined || item.checker()) {
+            if (item.processor !== undefined) {
+                var error = item.processor();
+                if (error) {
+                    this.error(error);
+                    return;
+                }
             }
             this.next();
         }
@@ -186,6 +191,7 @@ var Checklist = (function (_super) {
      */
     Checklist.prototype.stop = function () {
         clearInterval(this.timer);
+        this.timer = 0;
         this.emit('stop');
     };
     /**
