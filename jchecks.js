@@ -178,8 +178,6 @@ var Emitter = (function () {
     // > processor 1
     // > checker 2
     // > checker 2
-    // > checker 2
-    // > checker 2
     // > processor 2
     // > checker 3
     // > processor 3
@@ -240,6 +238,13 @@ var Checklist = (function (_super) {
         _this.timeout = options.timeout || 5000;
         return _this;
     }
+    Object.defineProperty(Checklist.prototype, "items", {
+        get: function () {
+            return this.stepItems;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * 主动运行状态机
      */
@@ -260,8 +265,10 @@ var Checklist = (function (_super) {
                 return;
             }
         }
+        this.emit('check', item);
         if (item.checker === undefined || item.checker()) {
             if (item.processor !== undefined) {
+                this.emit('process', item);
                 var error = item.processor();
                 if (error) {
                     this.error(error);

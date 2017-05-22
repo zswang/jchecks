@@ -154,6 +154,10 @@ class Checklist extends Emitter {
     this.timeout = options.timeout || 5000
   }
 
+  get items() {
+    return this.stepItems;
+  }
+
   /**
    * 主动运行状态机
    */
@@ -175,8 +179,10 @@ class Checklist extends Emitter {
       }
     }
 
+    this.emit('check', item)
     if (item.checker === undefined || item.checker()) {
       if (item.processor !== undefined) {
+        this.emit('process', item)
         let error = item.processor()
         if (error) {
           this.error(error)

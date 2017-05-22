@@ -1,13 +1,19 @@
 var jchecks = require('../');
 var page = require('webpage').create();
+var url = 'https://www.baidu.com/';
 
 var checklist = new jchecks.Checklist({
   timeout: 60 * 1000, // 一分钟
   stepItems: [
     {
+      processor: function () {
+        page.open(url);
+      },
+    },
+    {
       checker: function () {
         return page.evaluate(function () {
-          return !!document.querySelector('#kw');
+          return document.readyState === 'complete' && !!document.querySelector('#kw');
         });
       },
       processor: function () {
@@ -20,13 +26,13 @@ var checklist = new jchecks.Checklist({
     {
       checker: function () {
         return page.evaluate(function () {
-          return !!document.querySelector('.head_nums_cont_inner .nums');
+          return document.readyState === 'complete' && !!document.querySelector('.head_nums_cont_inner .nums');
         });
       },
       processor: function () {
         var text = page.evaluate(function () {
-          var result = document.querySelector('.head_nums_cont_inner .nums').innerHTML;
-          document.querySelector('#page .n').click();
+          var result = document.querySelector('#page > strong').textContent;
+          document.querySelector('#page .n:last-child').click();
           return result;
         });
         console.log(text);
@@ -35,7 +41,7 @@ var checklist = new jchecks.Checklist({
     {
       checker: function () {
         return page.evaluate(function () {
-          return /^\s*2\s*$/.test(document.querySelector('#page > strong').textContent);
+          return document.readyState === 'complete' && /^\s*2\s*$/.test(document.querySelector('#page > strong').textContent);
         });
       },
       processor: function () {
@@ -59,9 +65,12 @@ checklist.on('error', function (error) {
   } else {
     phantom.exit();
   }
+}).on('process', function (item) {
+  console.log('process step: ' + this.items.indexOf(item));
+}).on('check', function (item) {
+  console.log('check step: ' + this.items.indexOf(item));
 });
 
-var url = 'https://www.baidu.com/';
 page.onError = function(msg, trace) {
   var msgStack = ['ERROR: ' + msg];
   if (trace && trace.length) {
@@ -72,7 +81,3 @@ page.onError = function(msg, trace) {
   }
   console.error(msgStack.join('\n'));
 };
-
-page.open(url, function () {
-  checklist.run();
-});
