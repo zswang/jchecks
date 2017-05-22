@@ -226,6 +226,8 @@ var Emitter = (function () {
   });
   checklist.start();
   checklist.start();
+  console.log(checklist.items.length);
+  // > 1
   ```
 */
 var Checklist = (function (_super) {
@@ -252,14 +254,14 @@ var Checklist = (function (_super) {
         if (!this.timer) {
             return;
         }
-        var item = this.stepItems[this.StepIndex];
+        var item = this.stepItems[this.stepIndex];
         if (!item) {
             this.stop();
             return;
         }
         var timeout = item.timeout === undefined ? this.timeout : item.timeout;
         if (timeout > 0) {
-            var delay = Date.now() - this.StepTime;
+            var delay = Date.now() - this.stepTime;
             if (delay > timeout) {
                 this.error('timeout');
                 return;
@@ -286,8 +288,8 @@ var Checklist = (function (_super) {
         this.timer = setInterval(function () {
             _this.run();
         }, this.interval);
-        this.StepIndex = 0;
-        this.StepTime = Date.now();
+        this.stepIndex = 0;
+        this.stepTime = Date.now();
         this.run();
         this.emit('start');
     };
@@ -295,9 +297,9 @@ var Checklist = (function (_super) {
      * To the next step
      */
     Checklist.prototype.next = function () {
-        this.StepIndex++;
-        this.StepTime = Date.now();
-        var item = this.stepItems[this.StepIndex];
+        this.stepIndex++;
+        this.stepTime = Date.now();
+        var item = this.stepItems[this.stepIndex];
         if (item) {
             this.emit('next');
         }

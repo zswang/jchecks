@@ -109,6 +109,9 @@ describe("src/ts/Checklist.ts", function () {
   });
   checklist.start();
   checklist.start();
+
+  examplejs_print(checklist.items.length);
+  assert.equal(examplejs_printLines.join("\n"), "1"); examplejs_printLines = [];
   });
           
 });

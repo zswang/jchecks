@@ -134,16 +134,19 @@ interface ChecklistOptions {
   });
   checklist.start();
   checklist.start();
+
+  console.log(checklist.items.length);
+  // > 1
   ```
 */
 class Checklist extends Emitter {
 
-  timer: number
-  StepIndex: number
-  StepTime: number
-  stepItems: StepItem[]
-  interval: number
-  timeout: number
+  private timer: number
+  private stepIndex: number
+  private stepTime: number
+  private stepItems: StepItem[]
+  private interval: number
+  private timeout: number
 
   constructor(options?: ChecklistOptions) {
     super()
@@ -165,14 +168,14 @@ class Checklist extends Emitter {
     if (!this.timer) {
       return
     }
-    let item = this.stepItems[this.StepIndex]
+    let item = this.stepItems[this.stepIndex]
     if (!item) {
       this.stop()
       return
     }
     let timeout = item.timeout === undefined ? this.timeout : item.timeout
     if (timeout > 0) {
-      let delay = Date.now() - this.StepTime
+      let delay = Date.now() - this.stepTime
       if (delay > timeout) {
         this.error('timeout')
         return
@@ -201,8 +204,8 @@ class Checklist extends Emitter {
     this.timer = setInterval(() => {
       this.run()
     }, this.interval)
-    this.StepIndex = 0
-    this.StepTime = Date.now()
+    this.stepIndex = 0
+    this.stepTime = Date.now()
     this.run()
 
     this.emit('start')
@@ -212,9 +215,9 @@ class Checklist extends Emitter {
    * To the next step
    */
   next() {
-    this.StepIndex++
-    this.StepTime = Date.now()
-    let item = this.stepItems[this.StepIndex]
+    this.stepIndex++
+    this.stepTime = Date.now()
+    let item = this.stepItems[this.stepIndex]
 
     if (item) {
       this.emit('next')
