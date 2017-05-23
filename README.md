@@ -15,7 +15,7 @@ checklist
       flag++;
   }, 1000);
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         console.log('checker 1')
         return flag > 0
@@ -35,6 +35,12 @@ checklist
         return null
       },
     }]
+  });
+
+  checklist.on('error', function (error) {
+	console.error(error);
+  }).on('stop', function () {
+	console.info('stop');
   });
 ```
 
