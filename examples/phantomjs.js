@@ -4,7 +4,7 @@ var url = 'https://www.baidu.com/';
 
 var checklist = new jchecks.Checklist({
   timeout: 60 * 1000, // 一分钟
-  stepItems: [
+  items: [
     {
       processor: function () {
         page.open(url);

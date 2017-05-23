@@ -1,3 +1,12 @@
+// colors 兼容 phantomjs
+global.process = {
+  env: {
+    COLORTERM: true
+  },
+  argv: [],
+};
+var colors = require('colors');
+
 var jchecks = require('../');
 var page = require('webpage').create();
 var url = 'https://www.baidu.com/';
@@ -43,7 +52,7 @@ var step_nextpage = {
 
 var nextpageChecklist = new jchecks.Checklist({
   timeout: 60 * 0000,
-  stepItems: [step_nextpage]
+  items: [step_nextpage]
 });
 
 var step_pageN = function (n) {
@@ -66,7 +75,7 @@ var step_pageN = function (n) {
 
 var checklist = new jchecks.Checklist({
   timeout: 15 * 1000,
-  stepItems: [
+  items: [
     step_openbaidu,
     step_searchCheckList,
     step_pageN(3),
@@ -76,7 +85,7 @@ var checklist = new jchecks.Checklist({
 var checklist_error = '';
 checklist.on('error', function (error) {
   checklist_error += error + '\n';
-  console.error(error);
+  console.error(colors.red(error));
 }).on('stop', function () {
   if (checklist_error) {
     phantom.exit(1);
@@ -84,9 +93,9 @@ checklist.on('error', function (error) {
     phantom.exit();
   }
 }).on('process', function (item) {
-  console.log('process step: ' + item.name);
+  console.log(colors.green('process: ' + item.name));
 }).on('check', function (item) {
-  console.log('check step: ' + item.name);
+  console.log(colors.cyan('check: ' + item.name));
 });
 
 page.onError = function (msg, trace) {
@@ -97,7 +106,7 @@ page.onError = function (msg, trace) {
       msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function + '")' : ''));
     });
   }
-  console.error(msgStack.join('\n'));
+  console.error(colors.red(msgStack.join('\n')));
 };
 
 checklist.start();

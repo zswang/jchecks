@@ -1,6 +1,6 @@
 {
   "name": "jchecks",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "A mobile page of internationalization development framework",
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
   "main": "jchecks.js",
   "dependencies": {},
   "devDependencies": {
+    "colors": "^1.1.2",
     "gulp": "^3.9.1",
     "gulp-connect": "^5.0.0",
     "gulp-examplejs": "0.0.9",

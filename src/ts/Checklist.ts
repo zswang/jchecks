@@ -25,7 +25,7 @@ export interface StepItem {
 
 interface ChecklistOptions {
   interval?: number
-  stepItems?: StepItem[]
+  items?: StepItem[]
   timeout?: number
 }
 
@@ -39,7 +39,7 @@ interface ChecklistOptions {
   }, 1000)
 
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         console.log('checker 1')
         return flag > 0
@@ -94,7 +94,7 @@ interface ChecklistOptions {
   ```js
   var flag = 0;
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         return flag > 0
       },
@@ -123,7 +123,7 @@ interface ChecklistOptions {
 
   var checklist = new jchecks.Checklist({
     timeout: 2000,
-    stepItems: [{
+    items: [{
       checker: function() {
 
       },
@@ -141,41 +141,41 @@ interface ChecklistOptions {
 */
 class Checklist extends Emitter {
 
-  private timer: number
-  private stepIndex: number
-  private stepTime: number
-  private stepItems: StepItem[]
-  private interval: number
-  private timeout: number
+  private _items: StepItem[]
+  private _timer: number
+  private _stepIndex: number
+  private _stepTime: number
+  private _interval: number
+  private _timeout: number
 
   constructor(options?: ChecklistOptions) {
     super()
 
     options = options || {}
-    this.stepItems = options.stepItems || []
-    this.interval = options.interval || 1000
-    this.timeout = options.timeout || 5000
+    this._items = options.items || []
+    this._interval = options.interval || 1000
+    this._timeout = options.timeout || 5000
   }
 
   get items() {
-    return this.stepItems;
+    return this._items;
   }
 
   /**
    * 主动运行状态机
    */
   run() {
-    if (!this.timer) {
+    if (!this._timer) {
       return
     }
-    let item = this.stepItems[this.stepIndex]
+    let item = this._items[this._stepIndex]
     if (!item) {
       this.stop()
       return
     }
-    let timeout = item.timeout === undefined ? this.timeout : item.timeout
+    let timeout = item.timeout === undefined ? this._timeout : item.timeout
     if (timeout > 0) {
-      let delay = Date.now() - this.stepTime
+      let delay = Date.now() - this._stepTime
       if (delay > timeout) {
         this.error('timeout')
         return
@@ -197,15 +197,15 @@ class Checklist extends Emitter {
   }
 
   start() {
-    if (this.timer) {
+    if (this._timer) {
       this.stop()
     }
 
-    this.timer = setInterval(() => {
+    this._timer = setInterval(() => {
       this.run()
-    }, this.interval)
-    this.stepIndex = 0
-    this.stepTime = Date.now()
+    }, this._interval)
+    this._stepIndex = 0
+    this._stepTime = Date.now()
     this.run()
 
     this.emit('start')
@@ -215,9 +215,9 @@ class Checklist extends Emitter {
    * To the next step
    */
   next() {
-    this.stepIndex++
-    this.stepTime = Date.now()
-    let item = this.stepItems[this.stepIndex]
+    this._stepIndex++
+    this._stepTime = Date.now()
+    let item = this._items[this._stepIndex]
 
     if (item) {
       this.emit('next')
@@ -230,8 +230,8 @@ class Checklist extends Emitter {
    * 停止检测
    */
   stop() {
-    clearInterval(this.timer)
-    this.timer = 0
+    clearInterval(this._timer)
+    this._timer = 0
     this.emit('stop')
   }
 

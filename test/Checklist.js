@@ -20,7 +20,7 @@ describe("src/ts/Checklist.ts", function () {
   }, 1000)
 
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         examplejs_print('checker 1')
         return flag > 0
@@ -68,7 +68,7 @@ describe("src/ts/Checklist.ts", function () {
     examplejs_printLines = [];
   var flag = 0;
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         return flag > 0
       },
@@ -98,7 +98,7 @@ describe("src/ts/Checklist.ts", function () {
 
   var checklist = new jchecks.Checklist({
     timeout: 2000,
-    stepItems: [{
+    items: [{
       checker: function() {
 
       },

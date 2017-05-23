@@ -136,7 +136,7 @@ var Emitter = (function () {
       flag++
   }, 1000)
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         console.log('checker 1')
         return flag > 0
@@ -190,7 +190,7 @@ var Emitter = (function () {
   ```js
   var flag = 0;
   var checklist = new jchecks.Checklist({
-    stepItems: [{
+    items: [{
       checker: function () {
         return flag > 0
       },
@@ -217,7 +217,7 @@ var Emitter = (function () {
   checklist.start();
   var checklist = new jchecks.Checklist({
     timeout: 2000,
-    stepItems: [{
+    items: [{
       checker: function() {
       },
       processor: function () {
@@ -235,14 +235,14 @@ var Checklist = (function (_super) {
     function Checklist(options) {
         var _this = _super.call(this) || this;
         options = options || {};
-        _this.stepItems = options.stepItems || [];
-        _this.interval = options.interval || 1000;
-        _this.timeout = options.timeout || 5000;
+        _this._items = options.items || [];
+        _this._interval = options.interval || 1000;
+        _this._timeout = options.timeout || 5000;
         return _this;
     }
     Object.defineProperty(Checklist.prototype, "items", {
         get: function () {
-            return this.stepItems;
+            return this._items;
         },
         enumerable: true,
         configurable: true
@@ -251,17 +251,17 @@ var Checklist = (function (_super) {
      * 主动运行状态机
      */
     Checklist.prototype.run = function () {
-        if (!this.timer) {
+        if (!this._timer) {
             return;
         }
-        var item = this.stepItems[this.stepIndex];
+        var item = this._items[this._stepIndex];
         if (!item) {
             this.stop();
             return;
         }
-        var timeout = item.timeout === undefined ? this.timeout : item.timeout;
+        var timeout = item.timeout === undefined ? this._timeout : item.timeout;
         if (timeout > 0) {
-            var delay = Date.now() - this.stepTime;
+            var delay = Date.now() - this._stepTime;
             if (delay > timeout) {
                 this.error('timeout');
                 return;
@@ -282,14 +282,14 @@ var Checklist = (function (_super) {
     };
     Checklist.prototype.start = function () {
         var _this = this;
-        if (this.timer) {
+        if (this._timer) {
             this.stop();
         }
-        this.timer = setInterval(function () {
+        this._timer = setInterval(function () {
             _this.run();
-        }, this.interval);
-        this.stepIndex = 0;
-        this.stepTime = Date.now();
+        }, this._interval);
+        this._stepIndex = 0;
+        this._stepTime = Date.now();
         this.run();
         this.emit('start');
     };
@@ -297,9 +297,9 @@ var Checklist = (function (_super) {
      * To the next step
      */
     Checklist.prototype.next = function () {
-        this.stepIndex++;
-        this.stepTime = Date.now();
-        var item = this.stepItems[this.stepIndex];
+        this._stepIndex++;
+        this._stepTime = Date.now();
+        var item = this._items[this._stepIndex];
         if (item) {
             this.emit('next');
         }
@@ -311,8 +311,8 @@ var Checklist = (function (_super) {
      * 停止检测
      */
     Checklist.prototype.stop = function () {
-        clearInterval(this.timer);
-        this.timer = 0;
+        clearInterval(this._timer);
+        this._timer = 0;
         this.emit('stop');
     };
     /**
