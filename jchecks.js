@@ -260,14 +260,15 @@ var Checklist = (function (_super) {
             return;
         }
         var timeout = item.timeout === undefined ? this._timeout : item.timeout;
+        var delay = null;
         if (timeout > 0) {
-            var delay = Date.now() - this._stepTime;
+            delay = Date.now() - this._stepTime;
             if (delay > timeout) {
                 this.error('timeout');
                 return;
             }
         }
-        this.emit('check', item);
+        this.emit('check', item, timeout, delay);
         if (item.checker === undefined || item.checker()) {
             if (item.processor !== undefined) {
                 this.emit('process', item);

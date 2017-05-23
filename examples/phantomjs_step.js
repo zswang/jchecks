@@ -94,8 +94,8 @@ checklist.on('error', function (error) {
   }
 }).on('process', function (item) {
   console.log(colors.green('process: ' + item.name));
-}).on('check', function (item) {
-  console.log(colors.cyan('check: ' + item.name));
+}).on('check', function (item, timeout, delay) {
+  console.log(colors.cyan('check: ' + item.name + ' delay: ' + delay + '/' + timeout));
 });
 
 page.onError = function (msg, trace) {
